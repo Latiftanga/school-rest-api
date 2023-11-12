@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   app:
-    container_name: ttek-api
+    container_name: api
     build:
       context: .
       args:
@@ -13,3 +13,22 @@ services:
       - ./app:/app
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=ttek_dev_db
+      - DB_USER=ttek_db_user
+      - DB_PASSWORD=supersecretpassword
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - dev_db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=ttek_dev_db
+      - POSTGRES_USER=ttek_db_user
+      - POSTGRES_PASSWORD=supersecretpassword
+
+volumes:
+  dev_db-data:
