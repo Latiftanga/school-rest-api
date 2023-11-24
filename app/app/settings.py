@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-54&trln@%fx&wh-oo366=pm496n#zdl%&t8dwag2sdv(zowx7o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['washs.ttek.local', 'amass.ttek.local']
 
 
 # Application definition

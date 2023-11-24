@@ -1,8 +1,24 @@
 version: '3.9'
 
 services:
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    hostname: nginx
+    ports:
+      - 80:80
+    volumes:
+    - nginx-conf:/etc/nginx/
+    - ./proxy/:/etc/nginx/conf.d/
+    depends_on:
+      - app
+      - db
+    networks:
+      - ttek-net
+
   app:
     container_name: api
+    hostname: api
     build:
       context: .
       args:
@@ -22,18 +38,29 @@ services:
       - DB_PASS=supersecretpassword
     depends_on:
       - db
+    networks:
+      - ttek-net
 
   db:
     image: postgres:16-alpine
     container_name: db
+    hostname: db
     environment:
       POSTGRES_USER: ttek_user
       POSTGRES_PASSWORD: supersecretpassword
       POSTGRES_DB: ttek_dev_db
     ports:
-      - "5432:5432"
+      - 5432:5432
     volumes:
       - dev-db-data:/var/lib/postgresql/data
+    networks:
+      - ttek-net
 
 volumes:
   dev-db-data:
+  nginx-conf:
+
+networks:
+  ttek-net:
+    external: true
+
