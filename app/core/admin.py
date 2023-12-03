@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 from core import models
+from staff.models import Staff
 
 
 class UserAdmin(BaseUserAdmin):
@@ -17,6 +18,7 @@ class UserAdmin(BaseUserAdmin):
                 'fields': (
                     'is_active',
                     'is_staff',
+                    'is_admin',
                     'is_superuser',
                     'is_teacher',
                     'is_student',
@@ -41,6 +43,7 @@ class UserAdmin(BaseUserAdmin):
                     'is_guardian',
                     'is_teacher',
                     'is_staff',
+                    'is_admin',
                     'is_superuser',
                 )
             }
@@ -49,3 +52,5 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(models.User, UserAdmin)
+admin.site.register(models.School)
+admin.site.register(Staff)

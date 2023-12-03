@@ -7,6 +7,27 @@ from django.contrib.auth.models import (
 )
 
 
+class School(models.Model):
+    """School in the system"""
+    name = models.CharField(max_length=64, unique=True)
+    subdomain = models.CharField(max_length=64, unique=True)
+    motto = models.CharField(max_length=255, blank=True, default='')
+    logo = models.CharField(max_length=64, blank=True, default='')
+    address = models.CharField(max_length=255)
+    city = models.CharField(max_length=64)
+    region = models.CharField(max_length=64)
+    phone = models.CharField(max_length=32)
+    email = models.CharField(
+        max_length=64,
+        unique=True,
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return self.name
+
+
 class UserManager(BaseUserManager):
     """Manager for users"""
 
@@ -25,6 +46,34 @@ class UserManager(BaseUserManager):
         user = self.create_user(email, password)
         user.is_staff = True
         user.is_superuser = True
+        user.save(using=self._db)
+        return user
+
+    def create_school_admin_account(self, email, password):
+        """Create new school admin user account"""
+        user = self.create_user(email, password)
+        user.is_admin = True
+        user.save(using=self._db)
+        return user
+
+    def create_teacher_user_account(self, email, password):
+        """Create new teacher user account"""
+        user = self.create_user(email, password)
+        user.is_teacher = True
+        user.save(using=self._db)
+        return user
+
+    def create_student_user_account(self, email, password):
+        """Create new student user account"""
+        user = self.create_user(email, password)
+        user.is_student = True
+        user.save(using=self._db)
+        return user
+
+    def create_guardian_user_account(self, email, password):
+        """Create new guardian user account"""
+        user = self.create_user(email, password)
+        user.is_student = True
         user.save(using=self._db)
         return user
 

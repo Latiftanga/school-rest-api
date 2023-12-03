@@ -17,8 +17,8 @@ services:
       - ttek-net
 
   app:
-    container_name: api
-    hostname: api
+    container_name: app
+    hostname: app
     build:
       context: .
       args:
@@ -63,4 +63,3 @@ volumes:
 networks:
   ttek-net:
     external: true
-
