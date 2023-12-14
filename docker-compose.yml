@@ -62,4 +62,3 @@ volumes:
 
 networks:
   ttek-net:
-    external: true
