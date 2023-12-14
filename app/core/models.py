@@ -49,31 +49,32 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_school_admin_account(self, email, password):
+    def create_admin_account(self, email, password):
         """Create new school admin user account"""
         user = self.create_user(email, password)
         user.is_admin = True
+        user.is_teacher = True
         user.save(using=self._db)
         return user
 
-    def create_teacher_user_account(self, email, password):
-        """Create new teacher user account"""
+    def create_staff_account(self, email, password):
+        """Create new staff user account"""
         user = self.create_user(email, password)
         user.is_teacher = True
         user.save(using=self._db)
         return user
 
-    def create_student_user_account(self, email, password):
+    def create_student_account(self, email, password):
         """Create new student user account"""
         user = self.create_user(email, password)
         user.is_student = True
         user.save(using=self._db)
         return user
 
-    def create_guardian_user_account(self, email, password):
+    def create_guardian_account(self, email, password):
         """Create new guardian user account"""
         user = self.create_user(email, password)
-        user.is_student = True
+        user.is_guardian = True
         user.save(using=self._db)
         return user
 

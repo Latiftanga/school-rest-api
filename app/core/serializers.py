@@ -6,6 +6,7 @@ from django.contrib.auth import (
 from django.utils.translation import gettext as _
 
 from rest_framework import serializers
+from staff.serializers import StaffDetailSerializer
 
 
 class UserAccountSerializer (
@@ -28,9 +29,14 @@ class UpdateUserAccountSerializer (
 ):
     """Serializer for updating user account"""
 
+    profile = serializers.SerializerMethodField(
+        method_name='get_user_profile',
+        read_only=True,
+    )
+
     class Meta:
         model = get_user_model()
-        fields = ['email', 'password']
+        fields = ['email', 'password', 'profile']
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
 
     def update(self, instance, validated_data):
@@ -40,6 +46,15 @@ class UpdateUserAccountSerializer (
             user.set_password(password)
             user.save()
         return user
+
+    def get_user_profile(self, user):
+        if user.is_teacher:
+            return StaffDetailSerializer(user.staff).data
+        if user.is_student:
+            return 'Student Details Here'
+        if user.is_guardian:
+            return 'Guardian Details Here'
+        return 'None'
 
 
 class AuthTokenSerializer(serializers.Serializer):

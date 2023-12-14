@@ -13,7 +13,7 @@ class IsTeacher(BasePermission):
     """School teacher user priviledges"""
 
     def has_permission(self, request, view):
-        return request.user.is_teacher
+        return request.user.is_teacher or request.user.is_admin
 
 
 class IsStudent(BasePermission):

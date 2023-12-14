@@ -29,4 +29,5 @@ urlpatterns = [
         name='api-docs'
     ),
     path('api/', include('core.urls')),
+    path('api/staff', include('staff.urls')),
 ]

@@ -1,7 +1,8 @@
 """Views for the Core App"""
 from rest_framework import (
     generics,
-    authentication
+    authentication,
+    permissions
 )
 from rest_framework.permissions import AllowAny
 from rest_framework.settings import api_settings
@@ -27,6 +28,7 @@ class ManageUserAccountView(generics.RetrieveUpdateAPIView):
     """Manage user account view"""
     serializer_class = serializers.UpdateUserAccountSerializer
     authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get_object(self):
         """Retrieve the current authenticated user"""
