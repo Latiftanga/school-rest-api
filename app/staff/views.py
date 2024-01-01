@@ -15,6 +15,7 @@ from core.permissions import (
     IsAdmin,
     IsTeacher
 )
+from core.serializers import UserAccountSerializer
 
 
 class StaffViewSets(
@@ -49,12 +50,28 @@ class StaffViewSets(
             return serializers.PromotionSerializer
         if self.action == 'promotion_detail':
             return serializers.PromotionSerializer
+        if self.action == 'account':
+            return UserAccountSerializer
         return self.serializer_class
 
     def perform_create(self, serializer):
         serializer.save(
             school=self.request.user.staff.school
         )
+
+    @action(
+        methods=['POST'], detail=True,
+        permission_classes=[IsAdmin]
+    )
+    def account(self, request, pk=None):
+        """Create account for a staff"""
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                'Account credentials created', status=status.HTTP_201_CREATED
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(
         methods=('GET', 'POST', ),

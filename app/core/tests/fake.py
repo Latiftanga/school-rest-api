@@ -44,7 +44,7 @@ qualification_provider = DynamicProvider(
 
 qualification_category_provider = DynamicProvider(
     provider_name="qualification_category",
-    elements=['Professional', 'Acacdemic'],
+    elements=['Professional', 'Academic'],
 )
 
 
@@ -80,7 +80,7 @@ def get_school_default_values():
     }
 
 
-def get_staff_deteil_default_values():
+def get_staff_detail_default_values():
     """Return some random values for staff object"""
     return {
         'category': fake.staff_category(),
@@ -95,7 +95,8 @@ def get_staff_deteil_default_values():
         'home_district': fake.city(),
         'nationality': fake.country(),
         'phone': fake.phone_number(),
-        'residential_address': fake.address()
+        'residential_address': fake.address(),
+        'permanent_address': fake.address()
     }
 
 

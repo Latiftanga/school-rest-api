@@ -1,84 +1,67 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from core.models import School
+
+from core.models import Person
 
 
-class Staff(models.Model):
+class Staff(Person):
     """staff in the system"""
-    category = models.CharField(max_length=128)
-    staff_id = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        unique=True
+    STAFF_CATEGORIES = [
+        ('Teaching', 'Teaching'),
+        ('Non Teaching', 'Non Teaching'),
+    ]
+
+    @classmethod
+    def generate_staff_id(cls):
+        prefix = 'TR'
+        seq_no = 1  # Starting sequence number
+        while Staff.objects.filter(id=f"{prefix}{seq_no:08}").exists():
+            seq_no += 1
+        return f"{prefix}{seq_no:08}"
+
+    category = models.CharField(
+        max_length=128, choices=STAFF_CATEGORIES
+    )
+    id = models.CharField(
+        max_length=255, unique=True, primary_key=True
     )
     registered_no = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        unique=True
+        max_length=255, blank=True, null=True, unique=True
     )
     sssnit_no = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        unique=True
+        max_length=255, blank=True, null=True, unique=True
     )
     license_no = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        unique=True
+        max_length=255, blank=True, null=True, unique=True
     )
-    date_appointed = models.DateField(
-        blank=True,
-        null=True
-    )
-    first_name = models.CharField(max_length=128)
-    last_name = models.CharField(max_length=128)
-    other_names = models.CharField(max_length=128, blank=True, default='')
-    gender = models.CharField(max_length=64)
-    date_of_birth = models.DateField()
-    place_of_birth = models.CharField(max_length=128)
-    home_town = models.CharField(max_length=128)
-    home_district = models.CharField(max_length=128)
-    home_region = models.CharField(max_length=128)
-    nationality = models.CharField(max_length=128)
-    religion = models.CharField(max_length=128, blank=True, default='')
-    disability = models.BooleanField(default=False)
-    disability_description = models.CharField(
-        max_length=255,
-        blank=True,
-        default=''
-    )
-    phone = models.CharField(
-        max_length=64,
-        unique=True,
-    )
-    residential_address = models.CharField(max_length=255)
+    date_appointed = models.DateField(blank=True, null=True)
     account = models.OneToOneField(
         get_user_model(),
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True,
         related_name='staff',
     )
-    active = models.BooleanField(default=True)
-    school = models.ForeignKey(
-        School,
-        on_delete=models.DO_NOTHING,
-        related_name='staff_list',
-    )
+    has_account = models.BooleanField(default=False)
 
     def __str__(self):
         if len(self.other_names) == 0:
             return f'{self.first_name} {self.last_name}'
         return f'{self.first_name} {self.last_name} {self.other_names}'
 
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.id = self.generate_staff_id()
+        super().save(*args, **kwargs)  # Call the original save method
+
 
 class Qualification(models.Model):
     """Staff Academic & Professional Credentials"""
-    category = models.CharField(max_length=255)
+    CATEGORIES = (
+        ('Academic', 'Academic'),
+        ('Professional', 'Professional'),
+    )
+    category = models.CharField(max_length=255, choices=CATEGORIES)
     title = models.CharField(max_length=255)
     date_obtain = models.DateField()
     institution = models.CharField(max_length=255)

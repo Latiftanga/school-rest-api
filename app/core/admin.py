@@ -8,10 +8,10 @@ from staff.models import Staff
 
 class UserAdmin(BaseUserAdmin):
     """Define teh admin pages for users."""
-    ordering = ['email']
-    list_display = ['email']
+    ordering = ['account_id']
+    list_display = ['account_id']
     fieldsets = (
-        (None, {'fields': ('email', 'password',)}),
+        (None, {'fields': ('account_id', 'password', 'email',)}),
         (
             _('Permissions'),
             {
@@ -35,7 +35,7 @@ class UserAdmin(BaseUserAdmin):
             {
                 'classes': ('wide',),
                 'fields': (
-                    'email',
+                    'account_id',
                     'password1',
                     'password2',
                     'is_active',

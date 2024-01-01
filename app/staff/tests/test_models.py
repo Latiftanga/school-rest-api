@@ -14,7 +14,7 @@ class TestModels(TestCase):
             **fake.get_school_default_values()
         )
 
-        staff_details = fake.get_staff_deteil_default_values()
+        staff_details = fake.get_staff_detail_default_values()
         staff = models.Staff.objects.create(
             school=school,
             **staff_details,
@@ -30,7 +30,7 @@ class TestModels(TestCase):
             **fake.get_school_default_values()
         )
 
-        staff_details = fake.get_staff_deteil_default_values()
+        staff_details = fake.get_staff_detail_default_values()
         staff = models.Staff.objects.create(
             school=school,
             **staff_details,
@@ -48,7 +48,7 @@ class TestModels(TestCase):
             **fake.get_school_default_values()
         )
 
-        staff_details = fake.get_staff_deteil_default_values()
+        staff_details = fake.get_staff_detail_default_values()
         staff = models.Staff.objects.create(
             school=school,
             **staff_details,

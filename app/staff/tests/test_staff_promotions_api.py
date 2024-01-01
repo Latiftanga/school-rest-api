@@ -19,7 +19,7 @@ def create_school():
 
 def create_staff(school):
     """Create and return sample staff member"""
-    defaults = fake.get_staff_deteil_default_values()
+    defaults = fake.get_staff_detail_default_values()
     return models.Staff.objects.create(
         school=school,
         **defaults
@@ -59,11 +59,11 @@ class PrivatePromotionAPITest(TestCase):
         )
         self.staff = models.Staff.objects.create(
             school=self.school,
-            **fake.get_staff_deteil_default_values()
+            **fake.get_staff_detail_default_values()
         )
         self.user = get_user_model()\
             .objects.create_staff_account(
-                email='teacher@example.com',
+                account_id=self.staff.id,
                 password='testpass@1234'
             )
         self.staff.account = self.user
@@ -77,8 +77,7 @@ class PrivatePromotionAPITest(TestCase):
         promo2 = models.Promotion.objects.create(
             **fake.get_promotion_default_values()
         )
-        self.staff.promotions.add(promo1)
-        self.staff.promotions.add(promo2)
+        self.staff.promotions.add(promo1, promo2)
         self.staff.save()
 
         url = get_staff_promotion_url(staff_id=self.staff.id)

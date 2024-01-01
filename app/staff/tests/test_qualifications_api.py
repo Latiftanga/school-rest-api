@@ -31,7 +31,7 @@ def create_school():
 
 def create_staff(school):
     """Create and return sample staff member"""
-    defaults = fake.get_staff_deteil_default_values()
+    defaults = fake.get_staff_detail_default_values()
     return models.Staff.objects.create(
         school=school,
         **defaults
@@ -60,11 +60,11 @@ class PrivateQualificationAPITest(TestCase):
         self.admin_staff = create_staff(school=self.school)
         self.admin_staff.account = get_user_model()\
             .objects.create_admin_account(
-            email='admin@example.com',
+            account_id=self.admin_staff.id,
             password='secretpass@123'
         )
         self.staff.account = get_user_model().objects.create_staff_account(
-            email='staff@example.com',
+            account_id=self.staff.id,
             password='superpass@123'
         )
         self.admin_client.force_authenticate(user=self.admin_staff.account)
@@ -96,7 +96,6 @@ class PrivateQualificationAPITest(TestCase):
 
         url = staff_qualification_url(staff_id=self.staff.id)
         res = self.staff_client.post(url, data)
-
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         self.assertEqual(res.data.get('title'), data['title'])
 

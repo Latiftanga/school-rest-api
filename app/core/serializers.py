@@ -16,11 +16,8 @@ class UserAccountSerializer (
 
     class Meta:
         model = get_user_model()
-        fields = ['email', ]
-
-    def create(self, validated_data):
-        return get_user_model().objects.create_user(
-            **validated_data
+        fields = (
+            'account_id', 'password',
         )
 
 
@@ -36,8 +33,11 @@ class UpdateUserAccountSerializer (
 
     class Meta:
         model = get_user_model()
-        fields = ['email', 'password', 'profile']
-        extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
+        fields = ['account_id', 'password', 'profile']
+        extra_kwargs = {
+            'password': {'write_only': True, 'min_length': 5},
+            'account_id': {'write_only': True}
+        }
 
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
@@ -59,7 +59,7 @@ class UpdateUserAccountSerializer (
 
 class AuthTokenSerializer(serializers.Serializer):
     """Serializer for the user auth token."""
-    email = serializers.EmailField()
+    account_id = serializers.CharField()
     password = serializers.CharField(
         style={'input_type': 'password'},
         trim_whitespace=False
@@ -67,11 +67,11 @@ class AuthTokenSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         """Validates and authenticate the user"""
-        email = attrs['email']
+        account_id = attrs['account_id']
         password = attrs['password']
         user = authenticate(
             request=self.context.get('request'),
-            email=email,
+            account_id=account_id,
             password=password,
         )
         if not user:
