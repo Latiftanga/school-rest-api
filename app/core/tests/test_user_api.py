@@ -148,7 +148,6 @@ class PrivateUserAPITest(TestCase):
             'password': 'NewPass@123'
         }
         res = self.admin_client.patch(ME_URL, payload)
-
         self.admin_staff.account.refresh_from_db()
         self.assertTrue(
             self.admin_staff.account.check_password(payload['password'])

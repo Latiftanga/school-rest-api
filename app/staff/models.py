@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-from core.models import Person
+from core.models import Person, School
 
 
 class Staff(Person):
@@ -35,6 +35,11 @@ class Staff(Person):
         max_length=255, blank=True, null=True, unique=True
     )
     date_appointed = models.DateField(blank=True, null=True)
+    school = models.ForeignKey(
+        School,
+        on_delete=models.DO_NOTHING,
+        related_name='staff',
+    )
     account = models.OneToOneField(
         get_user_model(),
         on_delete=models.SET_NULL,

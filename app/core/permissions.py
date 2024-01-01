@@ -8,7 +8,15 @@ class IsAdmin(BasePermission):
         user = request.user
         if user.is_anonymous:
             return False
-        return user.is_admin and user.is_teacher
+        return user.is_admin
+
+
+class IsSuper(BasePermission):
+    """Super user priviledges"""
+    def has_permission(self, request, view):
+        if request.user.is_anonymous:
+            return False
+        return request.user.is_superuser
 
 
 class IsTeacher(BasePermission):
@@ -17,7 +25,7 @@ class IsTeacher(BasePermission):
     def has_permission(self, request, view):
         if request.user.is_anonymous:
             return False
-        return request.user.is_teacher or request.user.is_admin
+        return request.user.is_teacher
 
 
 class IsStudent(BasePermission):
@@ -36,3 +44,10 @@ class IsGuardian(BasePermission):
         if request.user.is_anonymous:
             return False
         return request.user.is_guardian
+
+
+class IsUser(BasePermission):
+    """School guardian user priviledges"""
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated

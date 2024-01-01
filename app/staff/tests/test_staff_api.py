@@ -86,7 +86,6 @@ class PrivateStaffAPITests(TestCase):
     def test_create_staff(self):
         """Test Creating a Staff"""
         payload = fake.get_staff_detail_default_values()
-        payload['school'] = self.staff.school.id
         res = self.client.post(STAFF_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         staff = models.Staff.objects.get(id=res.data['id'])
@@ -100,8 +99,8 @@ class PrivateStaffAPITests(TestCase):
         payload['school'] = self.staff.school.id
         payload['has_account'] = True
         payload['email'] = 'admin@example.com'
-
         res = self.client.post(STAFF_URL, payload)
+        # print(res.data)
         staff = models.Staff.objects.get(id=res.data['id'])
 
         self.assertTrue(res.data['has_account'], True)

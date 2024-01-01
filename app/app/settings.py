@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     #Third party Apps
     'rest_framework',
+    'rest_framework_roles',
     'drf_spectacular',
 
     #Local Apps
@@ -140,13 +141,17 @@ AUTH_USER_MODEL = 'core.User'
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
 
+REST_FRAMEWORK_ROLES = {
+  'ROLES': 'core.roles.ROLES',
+  'SKIP_MODULES': [
+        'django.*',
+        # 'project.app.*',
+    ],
+}
 
 #Email Configurations
 EMAIL_HOST = 'sandbox.smtp.mailtrap.io'

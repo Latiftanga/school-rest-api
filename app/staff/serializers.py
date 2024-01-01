@@ -44,7 +44,6 @@ class StaffSerializer(serializers.ModelSerializer):
             'digital_address',
             'postal_address',
             'has_account',
-
         ]
         read_only_fields = [
             'id',
@@ -53,8 +52,13 @@ class StaffSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         """Get the current login user school"""
-        request = self.context.get('request')
-        attrs['school'] = request.user.staff.school
+        user = self.context.get('request').user
+        try:
+            attrs['school'] = user.staff.school.id
+        except ValueError:
+            raise serializers.ValidationError(
+              'You must be assign a school to perform this operation'
+            )
         return attrs
 
     def create(self, validated_data):

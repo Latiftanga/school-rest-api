@@ -47,7 +47,7 @@ class PublicPromotionTests(TestCase):
         """Test auth is required"""
         url = get_staff_promotion_url(staff_id=1)
         res = self.client.get(url)
-        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class PrivatePromotionAPITest(TestCase):

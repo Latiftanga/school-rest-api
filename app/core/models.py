@@ -141,11 +141,6 @@ class Person(models.Model):
     digital_address = models.CharField(max_length=64, blank=True, default='')
     postal_address = models.CharField(max_length=255, blank=True, default='')
     active = models.BooleanField(default=True)
-    school = models.ForeignKey(
-        School,
-        on_delete=models.DO_NOTHING,
-        related_name='personal_details',
-    )
 
     class Meta:
         abstract = True

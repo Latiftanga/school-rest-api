@@ -5,17 +5,11 @@ from rest_framework import (
     authentication,
     status
 )
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from staff import models
 from staff import serializers
-from core.permissions import (
-    IsAdmin,
-    IsTeacher
-)
-from core.serializers import UserAccountSerializer
 
 
 class StaffViewSets(
@@ -30,9 +24,15 @@ class StaffViewSets(
     authentication_classes = (
         authentication.TokenAuthentication,
     )
-    permission_classes = (
-        IsAuthenticated, IsTeacher or IsAdmin,
-    )
+    view_permissions = {
+        'create,list': {'admin': True},
+        'qualifications,promotions,retrieve': {
+            'admin': True, 'teacher': True
+        },
+        'promotion_detail,qualification_detail': {
+            'admin': True, 'teacher': True
+        }
+    }
 
     def get_queryset(self):
         """Retrieve and return staff list for current admin user"""
@@ -50,28 +50,12 @@ class StaffViewSets(
             return serializers.PromotionSerializer
         if self.action == 'promotion_detail':
             return serializers.PromotionSerializer
-        if self.action == 'account':
-            return UserAccountSerializer
         return self.serializer_class
 
     def perform_create(self, serializer):
         serializer.save(
             school=self.request.user.staff.school
         )
-
-    @action(
-        methods=['POST'], detail=True,
-        permission_classes=[IsAdmin]
-    )
-    def account(self, request, pk=None):
-        """Create account for a staff"""
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(
-                'Account credentials created', status=status.HTTP_201_CREATED
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(
         methods=('GET', 'POST', ),
